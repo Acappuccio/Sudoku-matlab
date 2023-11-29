@@ -1,3 +1,15 @@
+CODE: 
+
+Checks that all niumbers are between 1 and grid
+```matlab
+all(size(a(a>0 & a<grid+1)) == size(a))
+```
+ Use 
+ ```matlab
+ unique(a(1,:))
+```
+function 
+
 ___
 # 11/29
 
