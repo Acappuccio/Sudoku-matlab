@@ -1,4 +1,4 @@
-function [solutions] = solveSudoku(puzzle)
+function [solutions] = solve_sudoku(puzzle)
 
 % Initialize the puzzle size
     [rows, cols] = size(puzzle);
