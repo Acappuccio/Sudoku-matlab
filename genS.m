@@ -1,5 +1,5 @@
 function [matN, solved] = genS (grid)
   matN = ones(grid); % stub
-  solved = 
+  solved = ones(grid);
 end
 % grid = integer
