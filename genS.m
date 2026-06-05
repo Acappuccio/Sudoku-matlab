@@ -1,65 +1,47 @@
-% H.Alani
-function [solved,b] = genS (grid) # d = 1:3... easy, medium, hard
-  mat = zeros(grid);
-  mat(1,:) = randperm(grid);
+function [solved, b] = genS(grid)
+b = 0;
+subSize = sqrt(grid);
+fprintf('\nGenerating board...\n');
+mat = zeros(grid);
+mat = backtrack(mat, grid, subSize, 1);
+solved = mat;
+clc;
+disp(solved);
+end
 
-  i=grid;
-  P=grid;
-  # rng(seed);
-  perc = -1;
-  while length(find(mat==0))>0
-    i=i+1;
-
-  #{.
-   # Display loading bar & percentage
-    a = floor(100*(sum(sum(mat~=0))/grid^2));
-    if a>perc
-      perc = a;
-      clc;
-      disp(["\n" num2str(a) "% ... " repelem("#-",[a,100-a])]);
-      disp(mat);
+function mat = backtrack(mat, grid, subSize, pos)
+if pos > grid^2
+    return;
+end
+row = floor((pos-1)/grid) + 1;
+col = mod(pos-1, grid) + 1;
+if mat(row, col) ~= 0
+    mat = backtrack(mat, grid, subSize, pos+1);
+    return;
+end
+nums = randperm(grid);
+for k = 1:grid
+    n = nums(k);
+    if isValid(mat, grid, subSize, row, col, n)
+        mat(row, col) = n;
+        result = backtrack(mat, grid, subSize, pos+1);
+        if ~any(any(result == 0))
+            mat = result;
+            return;
+        end
+        mat(row, col) = 0;
     end
-  #}
-    cond1 = true;
-    while cond1
-      # find column and row number based on i (square index)
-      col = floor((i-1)/grid)+1;
-      row = mod(i,grid)+1;
-      a = sqrt(grid); # subsquare size
-      subsq = ((ceil(col/a)-1)*a)+ceil(row/a); # subsquare index (#)
-      #disp(i);
+end
+end
 
-      if col<=grid && mat(col,row)==0 # make sure i is within the matrix & unsolved
-        cond1=false;
-      else
-        i=i+1;
-      end
-
-      if i>grid^2 # if i goes outside matrix, reset
-        i=1;
-        P=P+1;
-      endif
-
-    end
-
-    a = possibS(mat,col,row);
-
-    try
-      if mat(col,row)==0 && length(a)<=P # if unsolved
-        mat(col,row) = a(randperm(length(a),1)); # try plugging in random possibility
-        #i=0;
-        P=1;
-      end
-    catch e # if error
-        mat(col,:)=zeros(1,grid); # reset row
-        i=0; # reset i
-#        seed=seed+1; # change seed
-#        rng(seed);
-      end
-    end
-    solved = mat;
-    clc;
-    disp("\n");
-    disp(mat);
-    disp("\n");
+function v = isValid(mat, grid, subSize, row, col, n)
+if any(mat(row,:) == n) || any(mat(:,col) == n)
+    v = false; return;
+end
+r0 = floor((row-1)/subSize)*subSize+1;
+c0 = floor((col-1)/subSize)*subSize+1;
+if any(any(mat(r0:r0+subSize-1, c0:c0+subSize-1) == n))
+    v = false; return;
+end
+v = true;
 end

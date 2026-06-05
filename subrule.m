@@ -1,27 +1,23 @@
-
-function [tf,z] = subrule (mat) # z = number of zeros in matrix
-  z=0;
-  tf = [];
-  grid = size(mat,1);
-  subRows = sqrt(grid);
-  corners = [1:subRows:grid]+[0:subRows-1]'.*grid.*subRows;
-  TL = @(i) ([i:subRows+i-1]+[0:grid:grid*subRows-1]')(:)';
-  disp(corners);
-  for i= corners(:)'
-    if sum(size(unique(mat(TL(i)))))~=sum(size(mat(TL(i))))
-      tf(end+1) = i;
+function [tf,z] = subrule(mat)
+grid = size(mat,1);
+subRows = sqrt(grid);
+tf = cell(1, grid);
+z = 0;
+for subsq = 1:grid
+    col_sq = ceil(subsq/subRows);
+    row_sq = mod(subsq-1, subRows) + 1;
+    col_start = (col_sq-1)*subRows + 1;
+    row_start = (row_sq-1)*subRows + 1;
+    submat = mat(col_start:col_start+subRows-1, row_start:row_start+subRows-1);
+    vals = submat(:)';
+    filled = vals(vals ~= 0);
+    if isempty(filled)
+        unused = 1:grid;
+    else
+        unused = find(all((1:grid) ~= filled') == 1);
     end
-    z=z+(size(find(mat(TL(i))==0),1));
-  end
-  tf = [mod(tf,grid)',floor(tf/grid)'+1];
-  z = z/length(corners);
-endfunction
-
-%{
-
-This function checks the subsquares within a matrix
-It will return a 1xN matrix of true or false
-Every part of the matrix will represent a separate subsquare
-mat(TL(i)))) returns all numbers inside subsquare i where i is the top left corner of the square
-
-%}
+    tf{subsq} = {unused};
+    z = z + sum(vals == 0);
+end
+z = z / (grid^2);
+end
