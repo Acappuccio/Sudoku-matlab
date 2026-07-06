@@ -26,6 +26,14 @@ automatic puzzle generation, difficulty settings, and a built-in solver.
 - `possibS.m` — Finds valid number possibilities for each cell
 - `solve_sudoku.m` — Solver logic
 
+## Example Gameplay
+
+### Generated Puzzle 
+![Generated Puzzle](grid.png)
+
+### Solved Puzzle 
+![Solved Puzzle](sol.png)
+
 ## Requirements
 MATLAB R2019b or later recommended.
 Originally developed in GNU Octave — ported to full MATLAB compatibility.
