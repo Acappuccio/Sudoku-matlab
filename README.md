@@ -32,7 +32,7 @@ automatic puzzle generation, difficulty settings, and a built-in solver.
 ![Generated Puzzle](grid.png)
 
 ### Solved Puzzle 
-![Solved Puzzle](sol.png)
+![Solved Puzzle](Sol.png)
 
 ## Requirements
 MATLAB R2019b or later recommended.
